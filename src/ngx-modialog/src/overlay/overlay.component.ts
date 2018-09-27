@@ -108,7 +108,7 @@ export class ModalOverlay extends BaseDynamicComponent {
     };
     Object.keys(style).forEach( k => this.setStyle(k, style[k]) );
   }
-  
+
   insideElement(): void {
     const style = {
       position: 'absolute',
@@ -181,18 +181,22 @@ export class ModalOverlay extends BaseDynamicComponent {
 
     if (isDoc) {
       this.dialogRef.onDestroy.subscribe(() => {
+        const containers = document.getElementsByTagName('bs-modal-container');
+        const container = containers[containers.length - 1];
         element.removeEventListener('click', elListener, false);
         element.removeEventListener('touchstart', elListener, false);
-        document.removeEventListener('click', docListener, false);
-        document.removeEventListener('touchend', docListener, false);
+        container.removeEventListener('click', docListener, false);
+        container.removeEventListener('touchend', docListener, false);
       });
 
 
       setTimeout(() => {
+        const containers = document.getElementsByTagName('bs-modal-container');
+        const container = containers[containers.length - 1];
         element.addEventListener('mousedown', elListener, false);
         element.addEventListener('touchstart', docListener, false);
-        document.addEventListener('click', docListener, false);
-        document.addEventListener('touchend', docListener, false);
+        container.addEventListener('click', docListener, false);
+        container.addEventListener('touchend', docListener, false);
       });
     }
   }
@@ -236,7 +240,7 @@ export class ModalOverlay extends BaseDynamicComponent {
    * A handler running before destruction of the overlay
    * use to delay destruction due to animation.
    * This is part of the workaround for animation, see canDestroy.
-   * 
+   *
    * NOTE: There is no guarantee that the listeners will fire, use dialog.onDestory for that.
    * @param fn
    */
@@ -246,7 +250,7 @@ export class ModalOverlay extends BaseDynamicComponent {
     }
     this.beforeDestroyHandlers.push(fn);
   }
-  
+
   documentKeypress(event: KeyboardEvent) {
     // check that this modal is the last in the stack.
     if (!this.dialogRef.overlay.isTopMost(this.dialogRef)) return;
